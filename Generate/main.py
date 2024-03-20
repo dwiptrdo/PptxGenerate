@@ -1,4 +1,4 @@
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse
 from python_pptx_text_replacer import TextReplacer
 from pptx.chart.data import CategoryChartData
 from pptx import Presentation
@@ -145,8 +145,8 @@ async def generate(Any: dict):
 
     # Data isu dan Sentiment
     data = Any['result']['sentiment']
-    categories = ["Negatif" ,"Netral" ,"Positif"]
-    totals = [data['negative']['percentage'],data['neutral']['percentage'],data['positive']['percentage']]
+    categories = ["Positif" ,"Netral" ,"Negatif"]
+    totals = [data['positive']['percentage'],data['neutral']['percentage'],data['negative']['percentage']]
 
 
     chart_data = CategoryChartData()
@@ -199,26 +199,21 @@ async def generate(Any: dict):
     data_perday = data['per_day_detail']
     data_teks1 = [topic['text'] for topic in data_perday['2022-04-01']['topics']]
     data_teks2 = [topic['text'] for topic in data_perday['2022-04-07']['topics']]
-    # tanggal 2022-04-01
+    # 2022-04-01
     slide3_1 = data_teks1[0]
     slide3_2 = data_teks1[1]
     slide3_3 = data_teks1[2]
-    slide3_4 = data_teks1[3]
+    slide3_4 = data_teks1[4]
     # 2022-04-07
     slide3_5 = data_teks2[0]
-    slide3_6 = data_teks2[3]
+    slide3_6 = data_teks2[4]
     slide3_7 = data_teks2[2]
+    slide3_8 = data_teks2[3]
     
     # data untuk mengganti di pptx slide ke - 4 dan diambil satu satu melewati index
     data_isu_sentiment = data['sentiment']
     data_teks3 = data_isu_sentiment['negative']['topic_examples']
     data_teks4 = data_isu_sentiment['positive']['topic_examples']
-
-    # untuk data isu dan sentiment negatif
-    slide4_1 = data_teks3[0]
-    slide4_2 = data_teks3[1]
-    slide4_3 = data_teks3[2]
-    slide4_4 = data_teks3[3]
 
     # untuk data isu dan sentiment positif
     slide4_5 = data_teks4[0]
@@ -239,22 +234,23 @@ async def generate(Any: dict):
 
         # untuk tanggal 2022-04-01
         ('Gangguan layanan mobile banking BCA', slide3_1),
-        ('Perluasan implementasi QRIS ', slide3_2),
+        ('Perluasan implementasi QRIS. ', slide3_2),
         ('BPJPH kembangkan Sistem Informasi Halal (Sihalal) yang terintegrasi dengan penyedia uang elektronik', slide3_3),
         ('Promo belanja menggunakan kartu debit dan kredit serta dompet digital', slide3_4),
 
         # untuk tanggal 2022-04-07
-        ('BI dorong penggunaan transaksi nontunai selama Ramadan dan Idulfitri', slide3_5),
-        ('Fitur Digital dalam Bulan Ramadhan.', slide3_6),
-        ('Pemerintah berencana memajaki fintech dan dompet digital', slide3_7),
+        ('Perluasan implementasi QRIS ', slide3_5),
+        ('BI dorong penggunaan transaksi nontunai selama Ramadan dan Idulfitri', slide3_6),
+        ('Fitur Digital dalam Bulan Ramadhan.', slide3_7),
+        ('Pemerintah berencana memajaki fintech dan dompet digital', slide3_8),
 
         # untuk data isu dan sentiment negatif
-        ('Keluhan masyarakat perihal gangguan pada layanan mobile banking BCA. [link]', slide4_1),
-        ('Terungkapnya modus skimming melalui modus pengganjal ATM di Cilacap. [link]', slide4_2),
-        ('Terungkapnya dugaan kasus skimming nasabah BNI di Samarinda. [link]', slide4_3),
-        ('Pencatutan identitas sebabkan kerugian berupa kesulitan pengajuan kartu kredit. [link]', slide4_4),
-        ('Keluhan soal saldo yang tidak kunjung masuk meskipun proses scan QRIS sudah berhasil. [link]', ''),
-        ('Ketimpangan penyaluran pinjaman online antara Pulau Jawa dan wilayah lainnya. [link]', ''),
+        ('Keluhan masyarakat perihal gangguan pada layanan mobile banking BCA. [link]', data_teks3[0] if len(data_teks3) >= 1 else ''),
+        ('Terungkapnya modus skimming melalui modus pengganjal ATM di Cilacap. [link]', data_teks3[1] if len(data_teks3) >= 2 else ''),
+        ('Terungkapnya dugaan kasus skimming nasabah BNI di Samarinda. [link]', data_teks3[2] if len(data_teks3) >= 3 else ''),
+        ('Pencatutan identitas sebabkan kerugian berupa kesulitan pengajuan kartu kredit. [link]', data_teks3[3] if len(data_teks3) >= 4 else ''),
+        ('Keluhan soal saldo yang tidak kunjung masuk meskipun proses scan QRIS sudah berhasil. [link]', data_teks3[4] if len(data_teks3) >= 5 else ''),
+        ('Ketimpangan penyaluran pinjaman online antara Pulau Jawa dan wilayah lainnya. [link]', data_teks3[5] if len(data_teks3) >= 6 else ''),
 
 
         # untuk data isu dan sentiment positif
